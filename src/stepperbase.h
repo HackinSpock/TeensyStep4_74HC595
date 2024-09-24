@@ -10,6 +10,8 @@
 #include <cstdint>
 #include <string>
 
+#include <Shifty.h>
+
 namespace TS4
 {
     class StepperBase
@@ -22,7 +24,7 @@ namespace TS4
 
 
      protected:
-        StepperBase(const int stepPin, const int dirPin);
+        StepperBase(Shifty shiftReg, const int stepPin, const int dirPin);
 
         void startMoveTo(int32_t s_tgt, int32_t v_e, uint32_t v_max, uint32_t a);
         void startRotate(int32_t v_max, uint32_t a);
@@ -49,7 +51,9 @@ namespace TS4
 
         inline void doStep();
 
+        Shifty shiftReg; //general shift register object
         const int stepPin, dirPin;
+        
 
         ITimer* stpTimer;
         inline void stepISR();
@@ -75,7 +79,8 @@ namespace TS4
 
     void StepperBase::doStep()
     {
-        digitalWriteFast(stepPin, HIGH);
+        //digitalWriteFast(stepPin, HIGH);
+        shiftReg.writeBit(stepPin, HIGH); // uses shift Register
         s += 1;
         pos += dir;
 
@@ -84,7 +89,12 @@ namespace TS4
         {
             if (stepper->B >= 0)
             {
-                digitalWriteFast(stepper->stepPin, HIGH);
+                //digitalWriteFast(stepper->stepPin, HIGH);
+                //A typical digitalWriteFast on an Arduino Uno (16Mhz) is 125 nS
+                //For a teensy 4.1 (600Mhz), it takes 1.6 nS to shift a bit
+                //With x6 shift registers, 17clocks/register, and 1.6nS
+                //6*17*1.6nS = 163 nanoseconds
+                shiftReg.writeBit(stepper->stepPin, HIGH); // uses shift Register
                 stepper->pos += stepper->dir;
                 stepper->B -= this->A;
             }
@@ -151,7 +161,8 @@ namespace TS4
             v_sqr += vDir * twoA;
 
             dir = signum(v_sqr);
-            digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
+            //digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
+            shiftReg.writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
             delayMicroseconds(5);
 
             v_abs = sqrtf(std::abs(v_sqr));
@@ -162,7 +173,8 @@ namespace TS4
         {
             //SerialUSB.println("rotISR reached");
             dir = signum(v_sqr);
-            digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
+            //digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
+            shiftReg.writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
             delayMicroseconds(5);
 
             if (v_tgt != 0)
@@ -235,7 +247,8 @@ namespace TS4
         StepperBase* stepper = this;
         while (stepper != nullptr)
         {
-            digitalWriteFast(stepper->stepPin, LOW);
+            //digitalWriteFast(stepper->stepPin, LOW);
+            shiftReg.writeBit(stepper->stepPin, LOW); // uses shift Register
             stepper = stepper->next;
         }
     }

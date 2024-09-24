@@ -5,14 +5,16 @@
 
 #include "stepperbase.h"
 #include <algorithm>
+#include <Shifty.h>
 
 namespace TS4
 {
-    StepperBase::StepperBase(int _stepPin, int _dirPin)
-        : s(0), v(0), v_sqr(0), stepPin(_stepPin), dirPin(_dirPin)
-    {
-        pinMode(stepPin, OUTPUT);
-        pinMode(dirPin, OUTPUT);
+     StepperBase::StepperBase(Shifty shift, int _stepPin, int _dirPin)
+        : s(0), v(0), v_sqr(0), shiftReg(shift), stepPin(_stepPin), dirPin(_dirPin)
+    {   
+        //THIS IS ALREADY DONE WITH shift register
+        //pinMode(stepPin, OUTPUT);
+        //pinMode(dirPin, OUTPUT);
 
         // setMaxSpeed(vMaxDefault);
     }
@@ -50,7 +52,8 @@ namespace TS4
         s_tgt      = ds;
 
         dir = signum(_s_tgt - pos);
-        digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
+        //digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
+        shiftReg.writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
         delayMicroseconds(5);
 
         twoA = 2 * a;

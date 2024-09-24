@@ -36,7 +36,9 @@ namespace TS4
                 stepper->A          = std::abs(delta);                 //
                 stepper->B          = 2 * stepper->A - leadStepper->A; // set bresenham params for dependent steppers
                 stepper->dir        = (delta >= 0) ? 1 : -1;
-                digitalWriteFast(stepper->dirPin, delta >= 0 ? HIGH : LOW);
+                
+                //digitalWriteFast(stepper->dirPin, delta >= 0 ? HIGH : LOW);
+                stepper->shiftReg.writeBit(stepper->dirPin, delta >= 0 ? HIGH : LOW); // uses shift Register
                 // SerialUSB1.printf("%s tgt:%d A:%d B:%d\n", stepper->name.c_str(), stepper->target, stepper->A, stepper->B);
                 // SerialUSB1.flush();
             }                                    //
@@ -69,7 +71,9 @@ namespace TS4
                 stepper->A          = std::abs(stepper->vMax); //
                 stepper->B          = 2 * stepper->A - leadStepper->A;    // set bresenham params for dependent steppers
                 stepper->dir        = (stepper->vMax >= 0) ? 1 : -1;
-                digitalWriteFast(stepper->dirPin, stepper->dir >= 0 ? HIGH : LOW);
+                //digitalWriteFast(stepper->dirPin, stepper->dir >= 0 ? HIGH : LOW);
+                stepper->shiftReg.writeBit(stepper->dirPin, stepper->dir >= 0 ? HIGH : LOW); // uses shift Register
+
                 //Serial.printf("r %s vMax:%d A:%d B:%d\n", stepper->name.c_str(), stepper->vMax, stepper->A, stepper->B);
             }                                    //
             sorted[sorted.size() - 1]->next = nullptr; // end of linked list
