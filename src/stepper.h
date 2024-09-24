@@ -7,7 +7,7 @@ namespace TS4
     class Stepper : public StepperBase
     {
      public:
-        Stepper(Shifty shift, int stepPin, int dirPin)
+        Stepper(Shifty *shift, int stepPin, int dirPin)
             : StepperBase(shift, stepPin, dirPin)
         {}
 

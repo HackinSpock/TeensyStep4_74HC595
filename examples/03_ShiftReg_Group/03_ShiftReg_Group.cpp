@@ -7,8 +7,8 @@ using namespace TS4;
 //declare shift register
 Shifty shift;
 
-Stepper s1(shift, 1, 2);
-Stepper s2(shift, 3, 4);
+Stepper s1(&shift, 1, 2);
+Stepper s2(&shift, 3, 4);
 
 void setup()
 {

@@ -24,7 +24,7 @@ namespace TS4
 
 
      protected:
-        StepperBase(Shifty shiftReg, const int stepPin, const int dirPin);
+        StepperBase(Shifty *shiftReg, const int stepPin, const int dirPin);
 
         void startMoveTo(int32_t s_tgt, int32_t v_e, uint32_t v_max, uint32_t a);
         void startRotate(int32_t v_max, uint32_t a);
