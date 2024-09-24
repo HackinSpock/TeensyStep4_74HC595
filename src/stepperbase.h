@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <cstdint>
 #include <string>
-
 #include <Shifty.h>
 
 namespace TS4
@@ -21,15 +20,13 @@ namespace TS4
         bool isMoving = false;
         void emergencyStop();
         void overrideSpeed(float factor);
-
-
+        
      protected:
-        StepperBase(Shifty *shiftReg, const int stepPin, const int dirPin);
+        StepperBase(Shifty *_shift, const int stepPin, const int dirPin);
 
         void startMoveTo(int32_t s_tgt, int32_t v_e, uint32_t v_max, uint32_t a);
         void startRotate(int32_t v_max, uint32_t a);
         void startStopping(int32_t va_end, uint32_t a);
-
 
         inline void setDir(int d);
         int32_t dir;
@@ -51,9 +48,8 @@ namespace TS4
 
         inline void doStep();
 
-        Shifty shiftReg; //general shift register object
+        Shifty* shiftReg; //general shift register object
         const int stepPin, dirPin;
-        
 
         ITimer* stpTimer;
         inline void stepISR();
@@ -80,7 +76,7 @@ namespace TS4
     void StepperBase::doStep()
     {
         //digitalWriteFast(stepPin, HIGH);
-        shiftReg.writeBit(stepPin, HIGH); // uses shift Register
+        shiftReg->writeBit(stepPin, HIGH); // uses shift Register
         s += 1;
         pos += dir;
 
@@ -94,7 +90,7 @@ namespace TS4
                 //For a teensy 4.1 (600Mhz), it takes 1.6 nS to shift a bit
                 //With x6 shift registers, 17clocks/register, and 1.6nS
                 //6*17*1.6nS = 163 nanoseconds
-                shiftReg.writeBit(stepper->stepPin, HIGH); // uses shift Register
+                shiftReg->writeBit(stepper->stepPin, HIGH); // uses shift Register
                 stepper->pos += stepper->dir;
                 stepper->B -= this->A;
             }
@@ -162,7 +158,7 @@ namespace TS4
 
             dir = signum(v_sqr);
             //digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
-            shiftReg.writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
+            shiftReg->writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
             delayMicroseconds(5);
 
             v_abs = sqrtf(std::abs(v_sqr));
@@ -174,7 +170,7 @@ namespace TS4
             //SerialUSB.println("rotISR reached");
             dir = signum(v_sqr);
             //digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
-            shiftReg.writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
+            shiftReg->writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
             delayMicroseconds(5);
 
             if (v_tgt != 0)
@@ -248,7 +244,7 @@ namespace TS4
         while (stepper != nullptr)
         {
             //digitalWriteFast(stepper->stepPin, LOW);
-            shiftReg.writeBit(stepper->stepPin, LOW); // uses shift Register
+            shiftReg->writeBit(stepper->stepPin, LOW); // uses shift Register
             stepper = stepper->next;
         }
     }

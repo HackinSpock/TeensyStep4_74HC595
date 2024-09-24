@@ -5,12 +5,11 @@
 
 #include "stepperbase.h"
 #include <algorithm>
-#include <Shifty.h>
 
 namespace TS4
 {
-     StepperBase::StepperBase(Shifty shift, int _stepPin, int _dirPin)
-        : s(0), v(0), v_sqr(0), shiftReg(shift), stepPin(_stepPin), dirPin(_dirPin)
+    StepperBase::StepperBase(Shifty *_shift, int _stepPin, int _dirPin)
+        : s(0), v(0), v_sqr(0), shiftReg(_shift), stepPin(_stepPin), dirPin(_dirPin)
     {   
         //THIS IS ALREADY DONE WITH shift register
         //pinMode(stepPin, OUTPUT);
@@ -53,7 +52,7 @@ namespace TS4
 
         dir = signum(_s_tgt - pos);
         //digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
-        shiftReg.writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
+        shiftReg->writeBit(dirPin, dir > 0 ? HIGH : LOW); // uses shift Register
         delayMicroseconds(5);
 
         twoA = 2 * a;
