@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "teensystep4.h"
 #include <Shifty.h>
+extern "C" uint32_t set_arm_clock(uint32_t frequency);
 
 using namespace TS4;
 
@@ -21,6 +22,7 @@ void setup()
     shift.setPins(13, 11, 17); 
 
     TS4::begin();
+    set_arm_clock(24000000);//set it to 24 Mhz
 
     s1
         // .setMaxSpeed(10'000)
