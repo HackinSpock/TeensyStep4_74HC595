@@ -19,11 +19,11 @@ void setup()
 
   // Set the clock, data, and latch pins you are using
   // This also sets the pinMode for these pins
-    shift.setPins(13, 11, 17); 
-
-    TS4::begin();
+    shift.setPins(11, 12, 8); 
     set_arm_clock(24000000);//set it to 24 Mhz
 
+    TS4::begin();
+    
     s1
         // .setMaxSpeed(10'000)
         // .setAcceleration(50'000);
