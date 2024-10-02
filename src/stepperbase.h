@@ -26,6 +26,7 @@ namespace TS4
 
         void startMoveTo(int32_t s_tgt, int32_t v_e, uint32_t v_max, uint32_t a);
         void startRotate(int32_t v_max, uint32_t a);
+        //void rotateAsync();
         void startStopping(int32_t va_end, uint32_t a);
 
         inline void setDir(int d);

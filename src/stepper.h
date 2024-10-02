@@ -20,7 +20,7 @@ namespace TS4
         Stepper& setAcceleration(uint32_t _a);         // steps/s^2
                                                        //
         void setTargetAbs(int32_t pos) { target = pos; }; // Set target position absolute
-                                                       // void setTargetRel(int32_t delta);                 // Set target position relative to current position
+        // void setTargetRel(int32_t delta);                 // Set target position relative to current position
 
         void moveAsync();
         void moveAbsAsync(int32_t target, uint32_t v = 0);
@@ -30,6 +30,7 @@ namespace TS4
         void moveRel(int32_t delta, uint32_t v = 0);
 
         void rotateAsync(int32_t v = 0);
+        //void rotateAsync(int32_t v, int32_t acc);
         void stopAsync();
         void stop();
 

@@ -39,8 +39,6 @@ namespace TS4
 
         void clear() { steppers.clear(); }
 
-
-
         void move()
         {
             startMove(); // start movement in the background
@@ -57,12 +55,28 @@ namespace TS4
             }
         }
 
-        // void rotateAsync(int32_t v1, int32_t, v2)
+        void rotate()
+        {
+            startRotate(); // start movement in the background
+            while (1)    // wait until all steppers have stopped
+            {
+                delay(1);
+                bool done = true;
+                for (auto stepper : steppers)
+                {
+                    if (stepper->isMoving)
+                        done = false;
+                }
+                if (done) break;
+            }
+        }
+
+        // void rotateAsync(int32_t v1, int32_t v2)
         // {
         //     unsigned a2 = steppers[0]->acc *steppers[1]->vMax/steppers[0]->vMax;
 
-        //     steppers[0]->rotateAsyncB(steppers[0]->vMax, steppers[0]->acc);
-        //     steppers[1]->rotateAsyncB(steppers[1]->vMax, a2);
+        //     steppers[0]->rotateAsync(steppers[0]->vMax, steppers[0]->acc);
+        //     steppers[1]->rotateAsync(steppers[1]->vMax, a2);
         // }
     };
 }
