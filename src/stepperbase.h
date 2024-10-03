@@ -132,7 +132,7 @@ namespace TS4
             v = signum(v_sqr) * sqrtf(std::abs(v_sqr));
             stpTimer->updateFrequency(std::abs(v));
             doStep();
-        } else // target reached
+        } else // target reached. 
         {
             stpTimer->stop();
             TimerFactory::returnTimer(stpTimer);

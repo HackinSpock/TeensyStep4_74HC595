@@ -55,20 +55,10 @@ namespace TS4
             }
         }
 
-        void rotate()
-        {
-            startRotate(); // start movement in the background
-            // while (1)    // wait until all steppers have stopped
-            // {
-            //     delay(1);
-            //     bool done = true;
-            //     for (auto stepper : steppers)
-            //     {
-            //         if (stepper->isMoving)
-            //             done = false;
-            //     }
-            //     if (done) break;
-            // }
+        void moveAsync()
+        {   
+            //NON-BLOCKING
+            startMove(); // start movement in the background
         }
 
         // void rotateAsync(int32_t v1, int32_t v2)
